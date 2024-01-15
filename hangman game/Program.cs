@@ -8,7 +8,6 @@ namespace hangman_game
     {
         static void AfficherMot(string mot, List<char> lettres) 
         {
-           // - - - - - - - -
 
             for (int i = 0; i < mot.Length; i++)
             {
@@ -38,10 +37,10 @@ namespace hangman_game
             return false;   
         }
 
-        static char DemanderUneLettre()
+        static char DemanderUneLettre(string message = "Rentrez une lettre : ")
         {
             while (true) { 
-                Console.Write("Rentrez une lettre : ");
+                Console.Write(message);
                 string reponse = Console.ReadLine();
 
                 if (reponse.Length == 1)
@@ -113,6 +112,8 @@ namespace hangman_game
                 Console.WriteLine();
                 Console.WriteLine("GAGNE !");
             }
+
+            Rejouer();
         }
 
         static string[] ChargerLesMots(string nomFichier)
@@ -128,22 +129,55 @@ namespace hangman_game
 
             return null;
         }
+        
+        static bool Rejouer()
+        {
+            char reponse = DemanderUneLettre("Voulez-vous refaire une partie ? (o/n) : ");
+
+            if ((reponse == 'o') || (reponse == 'O'))
+            {
+                return true ;
+            }
+            else if ((reponse == 'n') || (reponse == 'N'))
+            {
+                return false;
+            }
+            else
+            {
+                Console.Write("veuillez saisir : \n" +
+                    "o => rejouer \n" +
+                    "n => abandonner  ");
+                return Rejouer();
+            }
+        }
 
         static void Main(string[] args)
         {
             var mots = ChargerLesMots("mots.txt");
 
-            if ((mots == null)|| (mots.Length == 0))
+            if ((mots == null) || (mots.Length == 0))
             {
                 Console.WriteLine("La liste de mot est vide");
             }
             else
             {
-                Random r = new Random();
-                int i  = r.Next(mots.Length);
+                while (true)
+                {
+                    Random r = new Random();
+                    int i = r.Next(mots.Length);
 
-                string mot = mots[i].Trim().ToUpper();
-                DevinerMot(mot);
+                    string mot = mots[i].Trim().ToUpper();
+
+                    DevinerMot(mot);
+
+                    if (!Rejouer())
+                    {
+                        break;
+                    }
+                    Console.Clear();
+                }
+
+                Console.WriteLine("Merci et à bientôt");
             }
 
 
