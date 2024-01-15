@@ -115,11 +115,34 @@ namespace hangman_game
             }
         }
 
+        static string[] ChargerLesMots(string nomFichier)
+        {
+            try
+            {
+                return File.ReadAllLines(nomFichier);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur de lecture du fichier : " + nomFichier + " (" + ex.Message + ")");
+            }
+
+            return null;
+        }
+
         static void Main(string[] args)
         {
-            string mot = "ELEPHANT";
+            var mots = ChargerLesMots("mots.txt");
 
-            DevinerMot(mot);
+            if ((mots == null)|| (mots.Length == 0))
+            {
+                Console.WriteLine("La liste de mot est vide");
+            }
+            else
+            {
+                string mot = mots[0].Trim().ToUpper();
+                DevinerMot(mot);
+            }
+
 
         }
     }
