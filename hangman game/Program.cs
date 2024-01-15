@@ -139,7 +139,10 @@ namespace hangman_game
             }
             else
             {
-                string mot = mots[0].Trim().ToUpper();
+                Random r = new Random();
+                int i  = r.Next(mots.Length);
+
+                string mot = mots[i].Trim().ToUpper();
                 DevinerMot(mot);
             }
 
