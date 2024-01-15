@@ -55,6 +55,8 @@ namespace nombre_magique
         {
 
             var lettresDevinees = new List<char>();
+            var lettresExclues = new List<char>();
+
             const int NB_VIES = 6;
             int viesRestantes = NB_VIES;
 
@@ -80,9 +82,14 @@ namespace nombre_magique
                 else 
                 {
                     Console.WriteLine("Cette lettre n'est pas dans le mot");
+
+                    lettresExclues.Add(lettre);
+
                     viesRestantes--;
                     Console.WriteLine("Vies restantes : " + viesRestantes);
                 }
+
+                Console.WriteLine("Le mot ne comprend pas les lettres : " + string.Join(", ", lettresExclues));
                 Console.WriteLine();
             }
             if (viesRestantes == 0)
@@ -97,12 +104,11 @@ namespace nombre_magique
             }
         }
 
-
         static void Main(string[] args)
         {
-            string mot = "ELEPHANT";
+            //string mot = "ELEPHANT";
 
-            DevinerMot(mot);
+            //DevinerMot(mot);
 
             //char lettre = DemanderUneLettre();
             //AfficherMot(mot, new List<char> { lettre });
