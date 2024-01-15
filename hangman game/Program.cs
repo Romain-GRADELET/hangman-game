@@ -23,9 +23,21 @@ namespace nombre_magique
             Console.WriteLine();
         }
 
+        static bool ToutesLettresDevinees(string mot, List<char> lettres) 
+        {
+            foreach (var lettre in lettres)
+            {
+                    mot = mot.Replace(lettre.ToString(), "");
+            }
+            if (mot == "")
+            {
+                return true;
+            }
+            return false;   
+        }
+
         static char DemanderUneLettre()
         {
-
             while (true) { 
                 Console.Write("Rentrez une lettre : ");
                 string reponse = Console.ReadLine();
@@ -37,9 +49,7 @@ namespace nombre_magique
                 }
                 Console.WriteLine("ERREUR: Vous devez rentrer une lettre");
             }
-
         }
-
 
         static void DevinerMot(string mot)
         {
@@ -61,6 +71,11 @@ namespace nombre_magique
                 {
                     Console.WriteLine("Cette lettre est dans le mot");
                     lettresDevinees.Add(lettre);
+                    
+                    if (ToutesLettresDevinees(mot, lettresDevinees) == true)
+                    {
+                        break;
+                    };
                 }
                 else 
                 {
@@ -73,7 +88,12 @@ namespace nombre_magique
             if (viesRestantes == 0)
             {
                 Console.WriteLine("PERDU !, le mot était : " + mot);
-
+            }
+            else
+            {
+                AfficherMot(mot, lettresDevinees);
+                Console.WriteLine();
+                Console.WriteLine("GAGNE !");
             }
         }
 
