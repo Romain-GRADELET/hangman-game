@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Immutable;
+using AsciiArt;
 
-namespace nombre_magique
+namespace hangman_game
 {
     class Program
     {
@@ -62,6 +64,8 @@ namespace nombre_magique
 
             while (viesRestantes > 0)
             {
+                Console.WriteLine(Ascii.PENDU[NB_VIES-viesRestantes]);
+
                 AfficherMot(mot, lettresDevinees);
                 Console.WriteLine();
 
@@ -79,19 +83,26 @@ namespace nombre_magique
                         break;
                     };
                 }
+                else if (lettresExclues.Contains(lettre))
+                {
+                    Console.WriteLine("Vous avez déjà essayé cette lettre");
+                }
                 else 
                 {
                     Console.WriteLine("Cette lettre n'est pas dans le mot");
 
                     lettresExclues.Add(lettre);
-
                     viesRestantes--;
                     Console.WriteLine("Vies restantes : " + viesRestantes);
                 }
-
-                Console.WriteLine("Le mot ne comprend pas les lettres : " + string.Join(", ", lettresExclues));
-                Console.WriteLine();
+                if (lettresExclues.Count != 0) {
+                    Console.WriteLine("Le mot ne comprend pas les lettres : " + string.Join(", ", lettresExclues));
+                    Console.WriteLine();
+                }
             }
+
+            Console.WriteLine(Ascii.PENDU[NB_VIES - viesRestantes]);
+
             if (viesRestantes == 0)
             {
                 Console.WriteLine("PERDU !, le mot était : " + mot);
@@ -106,12 +117,10 @@ namespace nombre_magique
 
         static void Main(string[] args)
         {
-            //string mot = "ELEPHANT";
+            string mot = "ELEPHANT";
 
-            //DevinerMot(mot);
+            DevinerMot(mot);
 
-            //char lettre = DemanderUneLettre();
-            //AfficherMot(mot, new List<char> { lettre });
         }
     }
 }
