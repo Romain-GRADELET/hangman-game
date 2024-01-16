@@ -8,7 +8,6 @@ namespace hangman_game
     {
         static void AfficherMot(string mot, List<char> lettres) 
         {
-
             for (int i = 0; i < mot.Length; i++)
             {
                 char lettre = mot[i];
@@ -30,7 +29,7 @@ namespace hangman_game
             {
                     mot = mot.Replace(lettre.ToString(), "");
             }
-            if (mot == "")
+            if (mot.Length == 0)
             {
                 return true;
             }
@@ -57,47 +56,48 @@ namespace hangman_game
 
             var lettresDevinees = new List<char>();
             var lettresExclues = new List<char>();
-
             const int NB_VIES = 6;
             int viesRestantes = NB_VIES;
 
             while (viesRestantes > 0)
             {
                 Console.WriteLine(Ascii.PENDU[NB_VIES-viesRestantes]);
+                Console.WriteLine();
 
                 AfficherMot(mot, lettresDevinees);
                 Console.WriteLine();
 
                 var lettre = DemanderUneLettre();
-
                 Console.Clear();
 
                 if (mot.Contains(lettre))
                 {
                     Console.WriteLine("Cette lettre est dans le mot");
                     lettresDevinees.Add(lettre);
-                    
-                    if (ToutesLettresDevinees(mot, lettresDevinees) == true)
+                    // GAGNE
+                    if (ToutesLettresDevinees(mot, lettresDevinees))
                     {
+                        //Console.WriteLine("GAGNE !");
+                        //return;
                         break;
-                    };
+                    }
                 }
-                else if (lettresExclues.Contains(lettre))
+                else
                 {
-                    Console.WriteLine("Vous avez déjà essayé cette lettre");
-                }
-                else 
-                {
-                    Console.WriteLine("Cette lettre n'est pas dans le mot");
+                    if (!lettresExclues.Contains(lettre))
+                    {
+                        viesRestantes--;
+                        lettresExclues.Add(lettre);
+                    }
 
-                    lettresExclues.Add(lettre);
-                    viesRestantes--;
                     Console.WriteLine("Vies restantes : " + viesRestantes);
                 }
-                if (lettresExclues.Count != 0) {
-                    Console.WriteLine("Le mot ne comprend pas les lettres : " + string.Join(", ", lettresExclues));
-                    Console.WriteLine();
+
+                if (lettresExclues.Count > 0)
+                {
+                    Console.WriteLine("Le mot ne contient pas les lettres : " + String.Join(", ", lettresExclues));
                 }
+                Console.WriteLine();
             }
 
             Console.WriteLine(Ascii.PENDU[NB_VIES - viesRestantes]);
@@ -110,10 +110,9 @@ namespace hangman_game
             {
                 AfficherMot(mot, lettresDevinees);
                 Console.WriteLine();
+
                 Console.WriteLine("GAGNE !");
             }
-
-            Rejouer();
         }
 
         static string[] ChargerLesMots(string nomFichier)
@@ -132,11 +131,10 @@ namespace hangman_game
         
         static bool Rejouer()
         {
-            char reponse = DemanderUneLettre("Voulez-vous refaire une partie ? (o/n) : ");
-
+            char reponse = DemanderUneLettre("Voulez-vous rejouer (o/n) : ");
             if ((reponse == 'o') || (reponse == 'O'))
             {
-                return true ;
+                return true;
             }
             else if ((reponse == 'n') || (reponse == 'N'))
             {
@@ -144,9 +142,7 @@ namespace hangman_game
             }
             else
             {
-                Console.Write("veuillez saisir : \n" +
-                    "o => rejouer \n" +
-                    "n => abandonner  ");
+                Console.WriteLine("Erreur : Vous devez répondre avec o ou n");
                 return Rejouer();
             }
         }
@@ -157,7 +153,7 @@ namespace hangman_game
 
             if ((mots == null) || (mots.Length == 0))
             {
-                Console.WriteLine("La liste de mot est vide");
+                Console.WriteLine("La liste de mots est vide");
             }
             else
             {
@@ -165,22 +161,16 @@ namespace hangman_game
                 {
                     Random r = new Random();
                     int i = r.Next(mots.Length);
-
                     string mot = mots[i].Trim().ToUpper();
-
                     DevinerMot(mot);
-
                     if (!Rejouer())
                     {
                         break;
                     }
                     Console.Clear();
                 }
-
-                Console.WriteLine("Merci et à bientôt");
+                Console.WriteLine("Merci et à bientôt.");
             }
-
-
         }
     }
 }
